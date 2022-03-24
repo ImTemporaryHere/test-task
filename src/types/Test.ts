@@ -6,5 +6,6 @@ export interface iTest {
   expSpeed: string,
   concept: string,
   date: string,
-  abcent: boolean
+  absent?: boolean
+  abcent?: boolean
 }

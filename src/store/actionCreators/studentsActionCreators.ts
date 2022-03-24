@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {
-  iGetStudentsRequestParams,
+  iGetStudentsRequestParams, iStudent,
   iStudentsAction,
   iStudentsApiResponse,
   StudentsActionTypes
@@ -46,5 +46,14 @@ export const fetchStudents = (page: iGetStudentsRequestParams['page'], size: iGe
         payload: `An error ${(e as Error).message } happened during students loading `
       })
     }
+  }
+}
+
+export const setSelectedStudents = (payload: iStudent['id'][])=>{
+  return (dispatch: Dispatch<iStudentsAction>) => {
+    dispatch({
+      type: StudentsActionTypes.SET_SELECTED_STUDENTS,
+      payload
+    })
   }
 }

@@ -18,25 +18,31 @@ enum sortingFields {
   speed = 'speed',
 }
 
-type sortBy = sortingFields.name | sortingFields.class | sortingFields.score | sortingFields.speed;
+export type sortBy = sortingFields.name | sortingFields.class | sortingFields.score | sortingFields.speed;
 
 type sortDirAsc = -1;
 type sortDirDesc = 1;
+
+export type sortDir = sortDirAsc | sortDirDesc;
 
 export interface iGetStudentsRequestParams {
   page: number;
   size: number;
   search?: string;
   sortBy?:  sortBy;
-  sortDir?: sortDirAsc | sortDirDesc;
+  sortDir?: sortDir
 
 }
 
 
 export enum StudentsActionTypes {
   SET_STUDENTS_LOADING = 'SET_STUDENTS_LOADING',
+
   FETCH_STUDENTS_SUCCESS = 'FETCH_STUDENTS_SUCCESS',
+
   FETCH_STUDENTS_ERROR = 'FETCH_STUDENTS_ERROR',
+
+  SET_SELECTED_STUDENTS = 'SET_SELECTED_STUDENTS'
 }
 
 
@@ -47,6 +53,7 @@ export interface iStudentsState {
   students: iStudent[];
   loading: boolean;
   error: null | string;
+  selectedStudents: iStudent['id'][];
 }
 
 interface iSetStudentsLoadingAction {
@@ -69,4 +76,12 @@ interface iFetchUsersErrorAction {
   payload: string;
 }
 
-export type iStudentsAction = iSetStudentsLoadingAction | iFetchStudentsSuccessAction | iFetchUsersErrorAction
+interface iSetSelectedStudentsAction {
+  type: StudentsActionTypes.SET_SELECTED_STUDENTS;
+  payload: iStudent['id'][];
+}
+
+export type iStudentsAction = iSetStudentsLoadingAction |
+  iFetchStudentsSuccessAction |
+  iFetchUsersErrorAction |
+  iSetSelectedStudentsAction

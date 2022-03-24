@@ -6,7 +6,8 @@ const initialState: iStudentsState = {
   currentSize: 5,
   students: [],
   loading: false,
-  error: null
+  error: null,
+  selectedStudents: []
 }
 
 
@@ -30,6 +31,13 @@ export const studentsReducer = (state = initialState, action: iStudentsAction): 
         return {
           ...state,
           error: action.payload,
+        }
+      }
+
+      case StudentsActionTypes.SET_SELECTED_STUDENTS: {
+        return {
+          ...state,
+          selectedStudents: action.payload,
         }
       }
 

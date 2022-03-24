@@ -1,4 +1,4 @@
-import * as StudentActionCreators from  './students'
+import * as StudentActionCreators from './studentsActionCreators'
 
 export default {
   ...StudentActionCreators
