@@ -1,0 +1,20 @@
+.filter-option {
+  display: flex;
+  padding: 7.5px 12px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 140%;
+  /* identical to box height, or 17px */
+  text-transform: uppercase;
+  /* New Gray */
+  color: #C0C0C0;
+
+  &:hover {
+    cursor: pointer;
+    color: white;
+  }
+
+  &__select-icon {
+    margin-left: 4px;
+  }
+}

@@ -1,8 +1,21 @@
 .header-menu-categories-list {
+  width: 100%;
   display: flex;
-  padding: 14px 0;
+  padding: 14px 40px;
   justify-content: center;
+  align-items: center;
 }
+
+
+.select-icon {
+  margin-left: 21px;
+  background-image: url("../../assets/select-icon.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 10px;
+  height: 10px;
+}
+
 
 .header-menu-category {
   font-weight: 400;
@@ -16,19 +29,15 @@
   margin-left: 16px;
   cursor: pointer;
   padding: 6px 12px;
+  transition: all 0.1s ease-in;
   &:hover {
     background-color: #A6192E;
-    font-weight: 700;
-    font-size: 14px;
-    line-height: 140%;
-    /* identical to box height, or 20px */
-    /* White */
+    transform: scale(1.03);
     color: #FFFFFF;
   }
 
 
   &:first-child {
-    margin-left: 0px;
     margin-right: 47px;
     position: relative;
 
@@ -36,22 +45,28 @@
 
 
 
-  &__select {
+  &__select-school {
+    margin-left: auto;
     margin-right: 47px;
-    position: relative;
+    display: flex;
+    align-items: center;
 
-    &__icon {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      top: calc(50% - 5px);
-      right: -21px;
-      background-image: url("../../assets/select-icon.svg");
-      background-repeat: no-repeat;
-      background-position: center;
-    }
   }
 
+}
+
+.user-select {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 10px;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+
+  &__picture {
+    width: 32px;
+    height: 32px;
+  }
 }

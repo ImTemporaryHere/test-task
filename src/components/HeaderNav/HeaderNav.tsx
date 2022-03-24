@@ -2,9 +2,11 @@ import React from 'react';
 // @ts-ignore
 import styles from './styles.module.scss';
 import classnames from 'classnames';
+// @ts-ignore
+import userPic from '../../assets/user-logo.jpg';
 
 
-const menuCategories = ['School 1','Analytics','Gradebooks','tests','students','teachers','archive']
+const menuCategories = ['Analytics','Gradebooks','tests','students','teachers','archive']
 
 function HeaderNav() {
   return (
@@ -13,10 +15,10 @@ function HeaderNav() {
 
         <li className={classnames(
           styles['header-menu-category'],
-          styles['header-menu-category__select']
+          styles['header-menu-category__select-school']
         )}>
           School 1
-          <div className={styles['header-menu-category__select__icon']}></div>
+          <div className={styles['select-icon']}></div>
         </li>
 
 
@@ -27,6 +29,14 @@ function HeaderNav() {
             </li>
           )
         })}
+
+
+        <li className={classnames(
+          styles['user-select'],
+        )}>
+          <img src={userPic} className={styles['user-select__picture']} alt=""/>
+          <div className={styles['select-icon']}></div>
+        </li>
 
 
       </ul>
