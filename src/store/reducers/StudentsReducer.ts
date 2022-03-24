@@ -1,9 +1,7 @@
 import {iStudentsAction, iStudentsState, StudentsActionTypes} from "../../types/Student";
 
 const initialState: iStudentsState = {
-  totalPages: null,
-  currentPage: 1,
-  currentSize: 5,
+  totalPages: 1,
   students: [],
   loading: false,
   error: null,

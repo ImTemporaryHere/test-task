@@ -47,9 +47,7 @@ export enum StudentsActionTypes {
 
 
 export interface iStudentsState {
-  totalPages: number | null;
-  currentPage: number;
-  currentSize: number;
+  totalPages: number;
   students: iStudent[];
   loading: boolean;
   error: null | string;

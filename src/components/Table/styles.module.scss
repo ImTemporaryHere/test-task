@@ -1,0 +1,12 @@
+.table-row {
+  background-color: white;
+
+  &:nth-child(odd) {
+    background-color: #F9F9F9;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #F2F2F2;
+  }
+}

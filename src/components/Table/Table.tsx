@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { alpha } from '@mui/material/styles';
+// @ts-ignore
+import styles from './styles.module.scss';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,6 +24,7 @@ import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
 import {useAction} from "../../hooks/useAction";
 import {useEffect} from "react";
+import SearchSection from "../SearchSection/SearchSection";
 
 
 
@@ -128,35 +130,49 @@ interface EnhancedTableToolbarProps {
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const { numSelected } = props;
 
+
+  if(numSelected > 0){
+
+  }
+
   return (
     <Toolbar
-      style={{minHeight: '54px', position: 'absolute',zIndex: 1,top: '-54px', width: '100%'}}
+      style={{minHeight: '54px'}}
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
-          bgcolor:  '#C0C0C0'
+          bgcolor: numSelected > 0 ? '#C0C0C0': 'white'
         }),
       }}
     >
-      {numSelected > 0 && (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      )}
-      {numSelected > 0 && (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      )
+      {
+        numSelected <= 0 ? (
+          <SearchSection/>
+        )
+          :
+          (
+            <>
+              <Typography
+                sx={{ flex: '1 1 100%' }}
+                color="inherit"
+                variant="subtitle1"
+                component="div"
+              >
+                {numSelected} selected
+              </Typography>
+              <Tooltip title="Delete">
+                <IconButton>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </>
+
+
+          )
+
       }
+
     </Toolbar>
   );
 };
@@ -203,7 +219,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
               <TableSortLabel
                 active={sortBy===headCell.slug}
-                direction={sortDir===1 ? 'asc': 'desc'}
+                direction={sortDir===-1 ? 'asc': 'desc'}
                 onClick={()=>{
                   console.log('sorting')
                   handleSortingRequest(headCell.slug as sortingFields ,sortDir===1 ? -1: 1)
@@ -231,23 +247,23 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
 
 export default function EnhancedTable() {
-  const {students, error, loading, totalPages, currentPage , currentSize,selectedStudents} = useTypedSelector(state=>state.students)
+  const {students, error, loading, totalPages,selectedStudents} = useTypedSelector(state=>state.students)
   const {fetchStudents,setSelectedStudents} = useAction()
 
 
 
   const [sortDir, setSortDir] = React.useState<sortDir>(1);
   const [sortBy, setSortBy] = React.useState<sortBy>(null);
-  const [page, setPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
 
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [sizeRowsOfPage, setSizeRowsOfPage] = React.useState(2);
 
   const handleRequestSort = (
     sortBy:sortBy,sortDir:sortDir
   ) => {
     setSortBy(sortBy);
     setSortDir(sortDir);
-    fetchStudents(currentPage,currentSize,sortBy,sortDir);
+    fetchStudents(currentPage,sizeRowsOfPage,sortBy,sortDir);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -280,25 +296,29 @@ export default function EnhancedTable() {
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+    setCurrentPage(newPage+1);
+    fetchStudents(newPage+1,sizeRowsOfPage,sortBy,sortDir);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+
+    const size = parseInt(event.target.value, 10)
+
+    setSizeRowsOfPage(size);
+    setCurrentPage(1);
+    fetchStudents(1,size,sortBy,sortDir);
+
   };
 
 
 
   const isSelected = (id: number) => selectedStudents.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty students.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - students.length) : 0;
+
 
 
   useEffect(()=>{
-    fetchStudents(currentPage,currentSize,null,null)
+    fetchStudents(currentPage,sizeRowsOfPage,null,null)
   },[])
 
   if(loading) {
@@ -312,11 +332,7 @@ export default function EnhancedTable() {
       <Paper sx={{ width: '100%', mb: 2}} style={{position: 'relative'}}>
 
 
-        {
-          selectedStudents.length > 0 && (
-            <EnhancedTableToolbar numSelected={selectedStudents.length} />
-          )
-        }
+        <EnhancedTableToolbar numSelected={selectedStudents.length} />
 
 
 
@@ -337,13 +353,13 @@ export default function EnhancedTable() {
             <TableBody>
 
               {students
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
+                      className={styles['table-row']}
                       hover
                       onClick={(event) => {
                         if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
@@ -386,25 +402,16 @@ export default function EnhancedTable() {
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </TableContainer>
         <div style={{display: 'flex',justifyContent: 'center'}}>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[2, 5, 10]}
             component="div"
-            count={students.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            count={totalPages*sizeRowsOfPage}
+            rowsPerPage={sizeRowsOfPage}
+            page={currentPage-1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
