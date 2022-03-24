@@ -18,7 +18,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import Toolbar from '@mui/material/Toolbar';
 import {Typography,Tooltip, IconButton} from "@mui/material";
-import {iStudent} from "../../types/Student";
+import {iStudent, sortBy, sortDir, sortingFields} from "../../types/Student";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
 import {useAction} from "../../hooks/useAction";
@@ -65,6 +65,7 @@ const students: iStudent[] = [
 
 
 interface HeadCell {
+  slug: string;
   disablePadding: boolean;
   columnName: string;
   width?: string;
@@ -73,29 +74,35 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
+    slug: sortingFields.name,
     columnName: 'Name',
     disablePadding: false,
     width: '300px',
     align: 'left'
   },
   {
+    slug: 'id',
     columnName: 'ID',
     disablePadding: false,
     width: '96px'
   },
   {
+    slug: sortingFields.class,
     columnName: 'Class',
     disablePadding: false,
   },
   {
+    slug: sortingFields.score,
     columnName: 'Av. Score , %',
     disablePadding: false,
   },
   {
+    slug: sortingFields.speed,
     columnName: 'Av. speed',
     disablePadding: false,
   },
   {
+    slug: 'parents',
     columnName: 'Parents',
     disablePadding: false,
     width: '530px'
@@ -103,11 +110,13 @@ const headCells: readonly HeadCell[] = [
 
 ];
 
-interface EnhancedTableProps {
+interface EnhancedTableHeadProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
+  handleSortingRequest: (sortBy:sortBy,sortDir: sortDir) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   rowCount: number;
+  sortBy: sortBy;
+  sortDir: sortDir;
 }
 
 
@@ -162,8 +171,8 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
 
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick,  numSelected, rowCount } = props;
+function EnhancedTableHead(props: EnhancedTableHeadProps) {
+  const { onSelectAllClick,  numSelected, rowCount,handleSortingRequest,sortBy,sortDir } = props;
 
 
   return (
@@ -181,28 +190,36 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           />
         </TableCell>
 
-        {headCells.map((headCell) => (
+        {headCells.map((headCell,i) => (
           <TableCell
             style={{width: headCell.width || 'auto'}}
             key={headCell.columnName}
             align={headCell.align || 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            /*sortDirection={orderBy === headCell.columnName ? order : false}*/
+            sortDirection={sortDir===1 ? 'asc': 'desc'}
           >
-            <TableSortLabel
-              /*active={orderBy === headCell.columnName}
-              direction={orderBy === headCell.columnName ? order : 'asc'}*/
-              onClick={()=>{
-                console.log('sorting')
-              }}
-            >
-              {headCell.columnName}
-              {'name' === headCell.columnName ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {'desc' === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
+
+            {headCell.slug in sortingFields ? (
+
+              <TableSortLabel
+                active={sortBy===headCell.slug}
+                direction={sortDir===1 ? 'asc': 'desc'}
+                onClick={()=>{
+                  console.log('sorting')
+                  handleSortingRequest(headCell.slug as sortingFields ,sortDir===1 ? -1: 1)
+                }}
+              >
+                {headCell.columnName}
+              </TableSortLabel>
+
+            )
+              :
+
+              headCell.columnName
+
+
+            }
+
           </TableCell>
         ))}
 
@@ -219,17 +236,18 @@ export default function EnhancedTable() {
 
 
 
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [sortDir, setSortDir] = React.useState<sortDir>(1);
+  const [sortBy, setSortBy] = React.useState<sortBy>(null);
   const [page, setPage] = React.useState(0);
 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: string,
+    sortBy:sortBy,sortDir:sortDir
   ) => {
-    console.log('sorting request')
+    setSortBy(sortBy);
+    setSortDir(sortDir);
+    fetchStudents(currentPage,currentSize,sortBy,sortDir);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -280,7 +298,7 @@ export default function EnhancedTable() {
 
 
   useEffect(()=>{
-    fetchStudents(1,5)
+    fetchStudents(currentPage,currentSize,null,null)
   },[])
 
   if(loading) {
@@ -291,7 +309,7 @@ export default function EnhancedTable() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }} style={{position: 'relative'}}>
+      <Paper sx={{ width: '100%', mb: 2}} style={{position: 'relative'}}>
 
 
         {
@@ -310,9 +328,10 @@ export default function EnhancedTable() {
           >
             <EnhancedTableHead
               numSelected={selectedStudents.length}
-              /*orderBy={orderBy}*/
+              sortBy={sortBy}
+              sortDir={sortDir}
               onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
+              handleSortingRequest={handleRequestSort}
               rowCount={students.length}
             />
             <TableBody>
@@ -379,15 +398,17 @@ export default function EnhancedTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={students.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <div style={{display: 'flex',justifyContent: 'center'}}>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={students.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
       </Paper>
     </Box>
   );

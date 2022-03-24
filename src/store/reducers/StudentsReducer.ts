@@ -7,7 +7,7 @@ const initialState: iStudentsState = {
   students: [],
   loading: false,
   error: null,
-  selectedStudents: []
+  selectedStudents: [],
 }
 
 

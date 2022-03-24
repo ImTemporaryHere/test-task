@@ -11,26 +11,26 @@ export interface iStudent {
 }
 
 
-enum sortingFields {
+export enum sortingFields {
   name = 'name',
   class = 'class',
   score = 'score',
   speed = 'speed',
 }
 
-export type sortBy = sortingFields.name | sortingFields.class | sortingFields.score | sortingFields.speed;
+export type sortBy = sortingFields.name | sortingFields.class | sortingFields.score | sortingFields.speed | null;
 
 type sortDirAsc = -1;
 type sortDirDesc = 1;
 
-export type sortDir = sortDirAsc | sortDirDesc;
+export type sortDir = sortDirAsc | sortDirDesc | null;
 
 export interface iGetStudentsRequestParams {
   page: number;
   size: number;
   search?: string;
-  sortBy?:  sortBy;
-  sortDir?: sortDir
+  sortBy:  sortBy;
+  sortDir: sortDir;
 
 }
 

@@ -2,14 +2,27 @@ import {Dispatch} from "redux";
 import {
   iGetStudentsRequestParams, iStudent,
   iStudentsAction,
-  iStudentsApiResponse,
+  iStudentsApiResponse, sortBy, sortDir,
   StudentsActionTypes
 } from "../../types/Student";
-import axios from "axios";
+import axios, {AxiosPromise, AxiosResponse} from "axios";
 
 const usersApi = 'https://test-task-j.herokuapp.com/data'
 
-export const fetchStudents = (page: iGetStudentsRequestParams['page'], size: iGetStudentsRequestParams['size']) => {
+
+interface iFetchStudentsProps {
+  page: iGetStudentsRequestParams['page'];
+  size: iGetStudentsRequestParams['size'];
+}
+
+type FetchStudents = (
+  page: iGetStudentsRequestParams['page'],
+  size: iGetStudentsRequestParams['size'],
+  sortBy: sortBy,
+  sortDir: sortDir,
+)=>(dispatch: Dispatch<iStudentsAction>)=>void
+
+export const fetchStudents: FetchStudents = (page, size,sortBy,sortDir) => {
   return async (dispatch: Dispatch<iStudentsAction>)=>{
     try {
       dispatch({
@@ -20,7 +33,9 @@ export const fetchStudents = (page: iGetStudentsRequestParams['page'], size: iGe
       const response = await axios.get<iStudentsApiResponse>(usersApi,{
         params: {
           page,
-          size
+          size,
+          sortBy,
+          sortDir
         }
       })
 
