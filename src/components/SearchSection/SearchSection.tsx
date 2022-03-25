@@ -8,9 +8,12 @@ import exportCsvIcon from '../../assets/button-export-csv-icon.png'
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
 import {debounce} from "ts-debounce";
+import {headCells} from "../Table/TableHead/TableHead";
+// @ts-ignore
+import { convertArrayToCSV } from 'convert-array-to-csv'
 
 function SearchSection() {
-  const {searchValueInput, currentPage, rowsPerPage, sortDir , sortBy} = useTypedSelector((state => state.students));
+  const {searchValueInput, currentPage, rowsPerPage, sortDir , sortBy,students} = useTypedSelector((state => state.students));
   const {setSearchInputValue,fetchStudents} = useAction()
 
 
@@ -21,6 +24,33 @@ function SearchSection() {
 
     setSearchInputValue(inputValue)
     debouncedFetchStudents(currentPage, rowsPerPage, sortBy, sortDir, inputValue )
+  }
+
+  const handleExportToCSV = ()=>{
+    const csv = convertArrayToCSV(students.map((student)=>{
+      const studentCopy = JSON.parse(JSON.stringify(student));
+      delete studentCopy.tests
+      studentCopy.parents = studentCopy.parents.join(' , ')
+      return studentCopy
+
+    }), {
+      header: headCells.map((cell)=>cell.slug),
+    });
+
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement("a");
+    if (link.download !== undefined) { // feature detection
+      // Browsers that support HTML5 download attribute
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", 'mydata.csv');
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   }
 
 
@@ -41,7 +71,7 @@ function SearchSection() {
       </div>
 
 
-      <button className={styles['export-csv-button']}>
+      <button onClick={handleExportToCSV} className={styles['export-csv-button']}>
         <img src={exportCsvIcon} alt="icon"/>
         export csv
       </button>

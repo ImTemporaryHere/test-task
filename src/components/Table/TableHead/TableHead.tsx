@@ -19,7 +19,7 @@ interface HeadCell {
   align?: 'right' | 'left'
 }
 
-const headCells: readonly HeadCell[] = [
+export const headCells: readonly HeadCell[] = [
   {
     slug: studentsSortingFields.name,
     columnName: 'Name',
