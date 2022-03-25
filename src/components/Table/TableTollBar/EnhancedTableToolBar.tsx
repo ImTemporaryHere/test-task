@@ -3,6 +3,8 @@ import SearchSection from "../../SearchSection/SearchSection";
 import {IconButton, Tooltip, Typography} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import * as React from "react";
+// @ts-ignore
+import styles from './styles.module.scss';
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
@@ -34,14 +36,8 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           :
           (
             <>
-              <Typography
-                sx={{ flex: '1 1 100%' }}
-                color="inherit"
-                variant="subtitle1"
-                component="div"
-              >
-                {numSelected} selected
-              </Typography>
+              {numSelected} selected
+
               <Tooltip title="Delete">
                 <IconButton>
                   <DeleteIcon />

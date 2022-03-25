@@ -8,7 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import {setRef} from "@mui/material";
+
 
 
 
@@ -89,7 +89,8 @@ function FilterSelect({inputLabel}: IfilterSelect) {
         label="Ageaaaaaaaaaa"
         onChange={handleChange}
         input={<BootstrapInput/>}
-        style={{background: 'white', width: '154px'}}
+        autoWidth
+        style={{background: 'white',width: '154px'}}
       >
         <MenuItem value={10}>Ten</MenuItem>
         <MenuItem value={20}>Twenty</MenuItem>

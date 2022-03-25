@@ -170,31 +170,74 @@ export default function EnhancedTable() {
 
             <TableBody>
 
-              {(loading || error) && (
-                <TableRow
+              <TableRow
 
-                  tabIndex={-1}
+                tabIndex={-1}
+              >
+                <TableCell
+                  component="th"
+                  padding='none'
+                  colSpan={8}
+                  style={{height: '10px'}}
                 >
-                  <TableCell
-                    component="th"
-                    padding='none'
-                    colSpan={8}
-                  >
-                    {
-                      loading && (
-                        <LinearProgress />
-                      )
-                    }
+                  {
+                    loading && (
+                      <LinearProgress />
+                    )
+                  }
 
-                    {error && (
-                      <h2>Error {error}</h2>
-                    )}
-                  </TableCell>
+                  {error && (
+                    <h2>Error {error}</h2>
+                  )}
+                </TableCell>
 
 
+                <TableCell
+                  component="th"
+                  padding='none'
+                  colSpan={8}
+                  align={'center'}
 
-                </TableRow>
-              )}
+                >
+                  {error && (
+                    <h2>Error {error}</h2>
+                  )}
+                </TableCell>
+
+
+              </TableRow>
+
+
+              <TableRow
+              >
+                <TableCell
+                  component="th"
+                  padding='none'
+                  colSpan={8}
+                  align={'center'}
+
+                >
+                  {collapsedRowsId.length > 0 && (
+                    <div style={{display: 'flex',justifyContent: 'center'}}>
+                      <TablePagination
+                        rowsPerPageOptions={[2, 5, 10]}
+                        component="div"
+                        count={totalPages*rowsPerPage}
+                        rowsPerPage={rowsPerPage}
+                        page={currentPage-1}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                    </div>
+                  )}
+                </TableCell>
+
+
+              </TableRow>
+
+
+
+
 
 
               {students
@@ -274,7 +317,17 @@ export default function EnhancedTable() {
 
                       <TableRow style={{ margin: 0,padding: 0 }}>
                         <TableCell padding={'none'}  colSpan={8}>
-                          <Collapse in={collapsedRowsId.includes(studentRow.id)} timeout="auto" unmountOnExit>
+                          <Collapse
+                            in={collapsedRowsId.includes(studentRow.id)}
+                            easing={'easy-in-out'}
+                            timeout={{
+                              appear: 500,
+                              enter: 300,
+                              exit: 5000,
+                            }}
+                            appear={true}
+                            exit={true}
+                          >
                             <CollapsedTable {...studentRow}/>
                           </Collapse>
                         </TableCell>
@@ -369,17 +422,19 @@ export default function EnhancedTable() {
         </TableContainer>
 
 
-        <div style={{display: 'flex',justifyContent: 'center'}}>
-          <TablePagination
-            rowsPerPageOptions={[2, 5, 10]}
-            component="div"
-            count={totalPages*rowsPerPage}
-            rowsPerPage={rowsPerPage}
-            page={currentPage-1}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </div>
+        {collapsedRowsId.length <= 0 && (
+          <div style={{display: 'flex',justifyContent: 'center'}}>
+            <TablePagination
+              rowsPerPageOptions={[2, 5, 10]}
+              component="div"
+              count={totalPages*rowsPerPage}
+              rowsPerPage={rowsPerPage}
+              page={currentPage-1}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </div>
+        )}
       </Paper>
     </Box>
   );
