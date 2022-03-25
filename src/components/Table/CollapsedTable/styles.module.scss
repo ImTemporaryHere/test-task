@@ -1,0 +1,56 @@
+.content-container {
+  /* Bg */
+  background: #F2F2F2;
+  /* Bg */
+  border: 1px solid #F2F2F2;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(60, 52, 135, 0.15);
+  padding: 20px 60px;
+}
+
+.student-info-heading {
+  display: flex;
+  align-items: center;
+
+  &__data-key {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+    text-transform: uppercase;
+    /* Gray Mid */
+    color: #777777;
+
+    margin-left: 15px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+
+  &__data-value {
+    margin-left: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+    text-transform: uppercase;
+    /* Gray Dark */
+    color: #5B5B5B;
+  }
+
+}
+
+.filters-section {
+  margin-top: 12.5px;
+  display: flex;
+
+}
+
+.filter-select-container {
+    margin-left: 16px;
+  &:first-child{
+    margin-left: 0;
+  }
+}

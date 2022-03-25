@@ -14,13 +14,20 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 // @ts-ignore
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {LinearProgress} from "@mui/material";
-import {sortStudentsBy, sortStudentsDir, studentsSortingFields} from "../../types/Student";
+import {Collapse, LinearProgress} from "@mui/material";
+import {iStudent, sortStudentsBy, sortStudentsDir} from "../../types/Student";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
-import { useEffect} from "react";
+import {useEffect, useState} from "react";
 import EnhancedTableHead from "./TableHead/TableHead";
 import EnhancedTableToolbar from "./TableTollBar/EnhancedTableToolBar";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// @ts-ignore
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CollapsedTable from "./CollapsedTable/CollapsedTable";
+import classNames from "classnames";
+
+
 
 
 
@@ -53,6 +60,10 @@ export default function EnhancedTable() {
     setStudentsCurrentPage,
     setStudentsRowsPerPage
   } = useAction()
+
+
+
+  const [collapsedRowsId,setCollapsedRowsId] = useState<iStudent['id'][]>([])
 
 
 
@@ -123,6 +134,15 @@ export default function EnhancedTable() {
 
   },[])
 
+
+
+
+
+
+
+
+
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2}} style={{position: 'relative'}}>
@@ -131,10 +151,6 @@ export default function EnhancedTable() {
         <EnhancedTableToolbar numSelected={selectedStudents.length} />
 
 
-
-        {error && (
-          <h2>Error {error}</h2>
-        )}
 
 
         <TableContainer>
@@ -154,7 +170,7 @@ export default function EnhancedTable() {
 
             <TableBody>
 
-              {loading && (
+              {(loading || error) && (
                 <TableRow
 
                   tabIndex={-1}
@@ -162,9 +178,17 @@ export default function EnhancedTable() {
                   <TableCell
                     component="th"
                     padding='none'
-                    colSpan={7}
+                    colSpan={8}
                   >
-                    <LinearProgress />
+                    {
+                      loading && (
+                        <LinearProgress />
+                      )
+                    }
+
+                    {error && (
+                      <h2>Error {error}</h2>
+                    )}
                   </TableCell>
 
 
@@ -174,61 +198,117 @@ export default function EnhancedTable() {
 
 
               {students
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                .map((studentRow, index) => {
+                  const isItemSelected = isSelected(studentRow.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  const isOddNumber = index % 2 === 0
 
                   return (
-                    <TableRow
-                      className={styles['table-row']}
-                      hover
-                      onClick={(event) => {
-                        if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
-                          return
-                        }
-                        console.log('row clicked')
-                      }}
-                      id={row.id.toString()}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id+Math.random().toString()}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onChange={(event)=>{
 
-                            handleSelectCheckbox(event,row.id)
-                          }}
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
+                    <React.Fragment key={studentRow.id+Math.random().toString()}>
+
+                      <TableRow
+                        className={classNames({
+                          [styles['table-row']]: true,
+                          [styles['table-row__odd']]: isOddNumber
+                        })}
+                        hover
+                        onClick={(event) => {
+                          if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
+                            return
+                          }
+
+
+                          if(collapsedRowsId.includes(studentRow.id)){
+                            setCollapsedRowsId(collapsedRowsId.filter((rowId)=>rowId!==studentRow.id))
+                          }
+                          else  {
+                            setCollapsedRowsId([...collapsedRowsId,studentRow.id])
+                          }
+
+
+
+                        }}
+                        id={studentRow.id.toString()}
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+
+                        selected={isItemSelected}
                       >
-                        {row.name}
-                      </TableCell>
-                      <TableCell>{row.id}</TableCell>
-                      <TableCell>{row.class}</TableCell>
-                      <TableCell>{row.score}</TableCell>
-                      <TableCell>{row.speed}</TableCell>
-                      <TableCell>{row.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onChange={(event)=>{
 
-                    </TableRow>
+                              handleSelectCheckbox(event,studentRow.id)
+                            }}
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                        >
+                          {studentRow.name}
+                        </TableCell>
+                        <TableCell>{studentRow.id}</TableCell>
+                        <TableCell>{studentRow.class}</TableCell>
+                        <TableCell>{studentRow.score}</TableCell>
+                        <TableCell>{studentRow.speed}</TableCell>
+                        <TableCell>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
+                        <TableCell>
+                          {
+                            collapsedRowsId.includes(studentRow.id) ?
+                              <KeyboardArrowUpIcon/>
+                              :
+                              <KeyboardArrowDownIcon/>
+                          }
+                        </TableCell>
+
+                      </TableRow>
+
+
+                      <TableRow style={{ margin: 0,padding: 0 }}>
+                        <TableCell padding={'none'}  colSpan={8}>
+                          <Collapse in={collapsedRowsId.includes(studentRow.id)} timeout="auto" unmountOnExit>
+                            <CollapsedTable {...studentRow}/>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+
+
                   );
                 })}
 
+
+
+
+
+
+
+
+
+
+
+
               <TableRow>
-                <TableCell padding={'none'} colSpan={7}>
+                <TableCell padding={'none'} colSpan={8}>
                   <h3 className={styles['archived-heading']}>archived</h3>
                 </TableCell>
               </TableRow>
+
+
+
+
+
+
+
+
 
               {
                 students.slice(0,2)
@@ -277,6 +357,7 @@ export default function EnhancedTable() {
                         <TableCell>{row.score}</TableCell>
                         <TableCell>{row.speed}</TableCell>
                         <TableCell>{row.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
+                        <TableCell><KeyboardArrowDownIcon/></TableCell>
 
                       </TableRow>
                     );

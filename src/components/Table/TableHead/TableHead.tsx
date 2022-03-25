@@ -5,6 +5,7 @@ import Checkbox from "@mui/material/Checkbox";
 import {sortStudentsBy, sortStudentsDir, studentsSortingFields} from "../../../types/Student";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import * as React from "react";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 
 
@@ -127,6 +128,8 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
           </TableCell>
         ))}
+
+        <TableCell><KeyboardArrowDownIcon/></TableCell>
 
       </TableRow>
     </TableHead>
