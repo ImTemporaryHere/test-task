@@ -1,10 +1,14 @@
-import Toolbar from "@mui/material/Toolbar";
 import SearchSection from "../../SearchSection/SearchSection";
-import {IconButton, Tooltip, Typography} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import * as React from "react";
 // @ts-ignore
 import styles from './styles.module.scss';
+// @ts-ignore
+import clearCross from '../../../assets/clear-cross-white.svg'
+// @ts-ignore
+import exportCsvIcon from '../../../assets/export-csv-white-icon.svg'
+// @ts-ignore
+import archiveIcon from '../../../assets/archive-selected-icon.svg'
+import classNames from "classnames";
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
@@ -18,16 +22,16 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
   }
 
+  const studentsQuantity = numSelected > 1 ? 'students' : 'student'
+
+
   return (
-    <Toolbar
-      style={{minHeight: '54px'}}
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: numSelected > 0 ? '#C0C0C0': 'white'
-        }),
+    <div
+      style={{
+        minHeight: '54px',
+        background: numSelected > 0 ? '#C0C0C0': 'white'
       }}
+
     >
       {
         numSelected <= 0 ? (
@@ -35,22 +39,38 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           )
           :
           (
-            <>
-              {numSelected} selected
+            <div className={styles['select-options']}>
 
-              <Tooltip title="Delete">
-                <IconButton>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </>
+              <div className={classNames(styles['select-options__white'],styles['select-options__option'])}>
+                {numSelected} {studentsQuantity} selected
+              </div>
+
+
+              <div className={classNames(styles['select-options__white'],styles['icon-button'],styles['select-options__option'])}>
+                <img src={clearCross} alt="icon" className={styles['icon-button__icon']}/>
+                clear all
+              </div>
+
+
+              <div className={classNames(styles['select-options__white'],styles['icon-button'],styles['select-options__option'])}>
+                <img src={exportCsvIcon} alt="icon" className={styles['icon-button__icon']}/>
+                export CSV
+              </div>
+
+              <div className={classNames(styles['icon-button'],styles['select-options__option'],styles['archive-selected'])}>
+                <img src={archiveIcon} alt="icon" className={styles['icon-button__icon']}/>
+                archive selected
+              </div>
+
+
+            </div>
 
 
           )
 
       }
 
-    </Toolbar>
+    </div>
   );
 };
 
