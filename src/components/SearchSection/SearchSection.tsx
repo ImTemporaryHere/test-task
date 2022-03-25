@@ -5,9 +5,14 @@ import styles from './styles.module.scss'
 import searchIcon from '../../assets/search-icon-input.svg'
 // @ts-ignore
 import exportCsvIcon from '../../assets/button-export-csv-icon.png'
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {useAction} from "../../hooks/useAction";
 
 
 function SearchSection() {
+  const {searchValueInput} = useTypedSelector((state => state.students));
+  const {setSearchInputValue} = useAction()
+
   return (
     <div className={styles['container']}>
       <h1 className={styles['section-name']}>
@@ -16,6 +21,10 @@ function SearchSection() {
 
       <div className={styles['search-input']}>
         <input
+          value={searchValueInput}
+          onChange={(e)=>{
+            setSearchInputValue(e.target.value)
+          }}
           placeholder={'Enter Student Name, Parent or ID here'}
           className={styles['search-input__input']}
           type="text"/>

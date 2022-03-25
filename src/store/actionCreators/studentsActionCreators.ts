@@ -20,9 +20,10 @@ type FetchStudents = (
   size: iGetStudentsRequestParams['size'],
   sortBy: sortBy,
   sortDir: sortDir,
+  search: string | null
 )=>(dispatch: Dispatch<iStudentsAction>)=>void
 
-export const fetchStudents: FetchStudents = (page, size,sortBy,sortDir) => {
+export const fetchStudents: FetchStudents = (page, size,sortBy,sortDir,search) => {
   return async (dispatch: Dispatch<iStudentsAction>)=>{
     try {
       dispatch({
@@ -35,7 +36,8 @@ export const fetchStudents: FetchStudents = (page, size,sortBy,sortDir) => {
           page,
           size,
           sortBy,
-          sortDir
+          sortDir,
+          search
         }
       })
 
@@ -68,6 +70,15 @@ export const setSelectedStudents = (payload: iStudent['id'][])=>{
   return (dispatch: Dispatch<iStudentsAction>) => {
     dispatch({
       type: StudentsActionTypes.SET_SELECTED_STUDENTS,
+      payload
+    })
+  }
+}
+
+export const setSearchInputValue = (payload: string)=>{
+  return (dispatch: Dispatch<iStudentsAction>) => {
+    dispatch({
+      type: StudentsActionTypes.SET_SEARCH_INPUT_VALUE,
       payload
     })
   }

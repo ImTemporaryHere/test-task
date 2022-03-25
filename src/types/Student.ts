@@ -42,7 +42,9 @@ export enum StudentsActionTypes {
 
   FETCH_STUDENTS_ERROR = 'FETCH_STUDENTS_ERROR',
 
-  SET_SELECTED_STUDENTS = 'SET_SELECTED_STUDENTS'
+  SET_SELECTED_STUDENTS = 'SET_SELECTED_STUDENTS',
+
+  SET_SEARCH_INPUT_VALUE = 'SET_SEARCH_INPUT_VALUE',
 }
 
 
@@ -52,6 +54,7 @@ export interface iStudentsState {
   loading: boolean;
   error: null | string;
   selectedStudents: iStudent['id'][];
+  searchValueInput: string;
 }
 
 interface iSetStudentsLoadingAction {
@@ -79,7 +82,13 @@ interface iSetSelectedStudentsAction {
   payload: iStudent['id'][];
 }
 
+interface iSetSearchInputValue {
+  type: StudentsActionTypes.SET_SEARCH_INPUT_VALUE;
+  payload: string;
+}
+
 export type iStudentsAction = iSetStudentsLoadingAction |
   iFetchStudentsSuccessAction |
   iFetchUsersErrorAction |
-  iSetSelectedStudentsAction
+  iSetSelectedStudentsAction |
+  iSetSearchInputValue

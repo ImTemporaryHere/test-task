@@ -23,7 +23,7 @@ import {iStudent, sortBy, sortDir, sortingFields} from "../../types/Student";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useDispatch} from "react-redux";
 import {useAction} from "../../hooks/useAction";
-import {useEffect} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import SearchSection from "../SearchSection/SearchSection";
 
 
@@ -247,7 +247,7 @@ function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
 
 export default function EnhancedTable() {
-  const {students, error, loading, totalPages,selectedStudents} = useTypedSelector(state=>state.students)
+  const {students, error, loading, totalPages,selectedStudents,searchValueInput} = useTypedSelector(state=>state.students)
   const {fetchStudents,setSelectedStudents} = useAction()
 
 
@@ -258,12 +258,13 @@ export default function EnhancedTable() {
 
   const [sizeRowsOfPage, setSizeRowsOfPage] = React.useState(2);
 
+
   const handleRequestSort = (
     sortBy:sortBy,sortDir:sortDir
   ) => {
     setSortBy(sortBy);
     setSortDir(sortDir);
-    fetchStudents(currentPage,sizeRowsOfPage,sortBy,sortDir);
+    fetchStudents(currentPage,sizeRowsOfPage,sortBy,sortDir,searchValueInput);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -297,7 +298,7 @@ export default function EnhancedTable() {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setCurrentPage(newPage+1);
-    fetchStudents(newPage+1,sizeRowsOfPage,sortBy,sortDir);
+    fetchStudents(newPage+1,sizeRowsOfPage,sortBy,sortDir,searchValueInput);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -306,7 +307,7 @@ export default function EnhancedTable() {
 
     setSizeRowsOfPage(size);
     setCurrentPage(1);
-    fetchStudents(1,size,sortBy,sortDir);
+    fetchStudents(1,size,sortBy,sortDir, searchValueInput);
 
   };
 
@@ -318,14 +319,8 @@ export default function EnhancedTable() {
 
 
   useEffect(()=>{
-    fetchStudents(currentPage,sizeRowsOfPage,null,null)
-  },[])
-
-  if(loading) {
-    return <div>please wait</div>
-  }
-
-  if (error) return <h1>Ошибка {error}</h1>
+    fetchStudents(currentPage,sizeRowsOfPage,sortBy,sortDir,searchValueInput);
+  },[searchValueInput])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -335,76 +330,88 @@ export default function EnhancedTable() {
         <EnhancedTableToolbar numSelected={selectedStudents.length} />
 
 
+        {
+          loading && (
+            <div>please wait</div>
+          )
+        }
 
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size='medium'
-          >
-            <EnhancedTableHead
-              numSelected={selectedStudents.length}
-              sortBy={sortBy}
-              sortDir={sortDir}
-              onSelectAllClick={handleSelectAllClick}
-              handleSortingRequest={handleRequestSort}
-              rowCount={students.length}
-            />
-            <TableBody>
+        {error && (
+          <h1>Error {error}</h1>
+        )}
 
-              {students
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+        {students.length && (
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size='medium'
+            >
+              <EnhancedTableHead
+                numSelected={selectedStudents.length}
+                sortBy={sortBy}
+                sortDir={sortDir}
+                onSelectAllClick={handleSelectAllClick}
+                handleSortingRequest={handleRequestSort}
+                rowCount={students.length}
+              />
+              <TableBody>
+                {students
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      className={styles['table-row']}
-                      hover
-                      onClick={(event) => {
-                        if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
-                          return
-                        }
-                        console.log('row clicked')
-                      }}
-                      id={row.name}
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onChange={(event)=>{
-
-                            handleSelectCheckbox(event,row.id)
-                          }}
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
+                    return (
+                      <TableRow
+                        className={styles['table-row']}
+                        hover
+                        onClick={(event) => {
+                          if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
+                            return
+                          }
+                          console.log('row clicked')
+                        }}
+                        id={row.id.toString()}
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id+Math.random().toString()}
+                        selected={isItemSelected}
                       >
-                        {row.name}
-                      </TableCell>
-                      <TableCell>{row.id}</TableCell>
-                      <TableCell>{row.class}</TableCell>
-                      <TableCell>{row.score}</TableCell>
-                      <TableCell>{row.speed}</TableCell>
-                      <TableCell>{row.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onChange={(event)=>{
 
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                              handleSelectCheckbox(event,row.id)
+                            }}
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                        >
+                          {row.name}
+                        </TableCell>
+                        <TableCell>{row.id}</TableCell>
+                        <TableCell>{row.class}</TableCell>
+                        <TableCell>{row.score}</TableCell>
+                        <TableCell>{row.speed}</TableCell>
+                        <TableCell>{row.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
+
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+
+
         <div style={{display: 'flex',justifyContent: 'center'}}>
           <TablePagination
             rowsPerPageOptions={[2, 5, 10]}

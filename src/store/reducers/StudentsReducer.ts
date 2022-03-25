@@ -6,6 +6,7 @@ const initialState: iStudentsState = {
   loading: false,
   error: null,
   selectedStudents: [],
+  searchValueInput: ''
 }
 
 
@@ -36,6 +37,13 @@ export const studentsReducer = (state = initialState, action: iStudentsAction): 
         return {
           ...state,
           selectedStudents: action.payload,
+        }
+      }
+
+      case StudentsActionTypes.SET_SEARCH_INPUT_VALUE: {
+        return {
+          ...state,
+          searchValueInput: action.payload,
         }
       }
 
