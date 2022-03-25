@@ -10,3 +10,19 @@
     background-color: #F2F2F2;
   }
 }
+
+.table-row-archived {
+  background: #F9F9F9;
+  box-shadow: 0px 1px 4px rgba(60, 52, 135, 0.15);
+}
+
+.archived-heading {
+  padding: 8px;
+  font-weight: 400;
+  font-size: 12px;
+  //line-height: 140%;
+  text-transform: uppercase;
+
+  color: #5B5B5B;
+
+}

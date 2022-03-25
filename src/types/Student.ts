@@ -11,26 +11,26 @@ export interface iStudent {
 }
 
 
-export enum sortingFields {
+export enum studentsSortingFields {
   name = 'name',
   class = 'class',
   score = 'score',
   speed = 'speed',
 }
 
-export type sortBy = sortingFields.name | sortingFields.class | sortingFields.score | sortingFields.speed | null;
+export type sortStudentsBy = studentsSortingFields.name | studentsSortingFields.class | studentsSortingFields.score | studentsSortingFields.speed | null;
 
 type sortDirAsc = -1;
 type sortDirDesc = 1;
 
-export type sortDir = sortDirAsc | sortDirDesc | null;
+export type sortStudentsDir = sortDirAsc | sortDirDesc | null;
 
 export interface iGetStudentsRequestParams {
   page: number;
   size: number;
   search?: string;
-  sortBy:  sortBy;
-  sortDir: sortDir;
+  sortBy:  sortStudentsBy;
+  sortDir: sortStudentsDir;
 
 }
 
@@ -44,7 +44,12 @@ export enum StudentsActionTypes {
 
   SET_SELECTED_STUDENTS = 'SET_SELECTED_STUDENTS',
 
-  SET_SEARCH_INPUT_VALUE = 'SET_SEARCH_INPUT_VALUE',
+  SET_STUDENTS_SEARCH_INPUT_VALUE = 'SET_STUDENTS_SEARCH_INPUT_VALUE',
+
+  SET_SORT_STUDENTS_BY = 'SET_SORT_STUDENTS_BY',
+  SET_SORT_STUDENTS_DIR = 'SET_SORT_STUDENTS_DIR',
+  SET_CURRENT_STUDENTS_PAGE = 'SET_CURRENT_STUDENTS_PAGE',
+  SET_STUDENTS_ROWS_PER_PAGE = 'SET_STUDENTS_ROWS_PER_PAGE',
 }
 
 
@@ -55,6 +60,10 @@ export interface iStudentsState {
   error: null | string;
   selectedStudents: iStudent['id'][];
   searchValueInput: string;
+  sortBy: sortStudentsBy;
+  sortDir: sortStudentsDir;
+  currentPage: number,
+  rowsPerPage: number,
 }
 
 interface iSetStudentsLoadingAction {
@@ -83,12 +92,44 @@ interface iSetSelectedStudentsAction {
 }
 
 interface iSetSearchInputValue {
-  type: StudentsActionTypes.SET_SEARCH_INPUT_VALUE;
+  type: StudentsActionTypes.SET_STUDENTS_SEARCH_INPUT_VALUE;
   payload: string;
 }
+
+interface iSetSortStudentsBy {
+  type: StudentsActionTypes.SET_SORT_STUDENTS_BY;
+  payload: sortStudentsBy
+}
+
+interface iSetSortStudentsDir {
+  type: StudentsActionTypes.SET_SORT_STUDENTS_DIR;
+  payload: sortStudentsDir;
+}
+
+interface iSetCurrentStudentsPage {
+  type: StudentsActionTypes.SET_CURRENT_STUDENTS_PAGE;
+  payload: number;
+}
+
+interface iSetStudentsRowsPerPage {
+  type: StudentsActionTypes.SET_STUDENTS_ROWS_PER_PAGE;
+  payload: number;
+}
+
+
+
+
+
+
+
+
 
 export type iStudentsAction = iSetStudentsLoadingAction |
   iFetchStudentsSuccessAction |
   iFetchUsersErrorAction |
   iSetSelectedStudentsAction |
-  iSetSearchInputValue
+  iSetSearchInputValue |
+  iSetSortStudentsBy |
+  iSetSortStudentsDir |
+  iSetCurrentStudentsPage |
+  iSetStudentsRowsPerPage

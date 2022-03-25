@@ -1,29 +1,32 @@
 import {Dispatch} from "redux";
 import {
-  iGetStudentsRequestParams, iStudent,
+  iGetStudentsRequestParams,
+  iStudent,
   iStudentsAction,
-  iStudentsApiResponse, sortBy, sortDir,
+  iStudentsApiResponse,
+  sortStudentsBy,
+  sortStudentsDir,
   StudentsActionTypes
 } from "../../types/Student";
-import axios, {AxiosPromise, AxiosResponse} from "axios";
+import axios from "axios";
 
 const usersApi = 'https://test-task-j.herokuapp.com/data'
 
 
-interface iFetchStudentsProps {
-  page: iGetStudentsRequestParams['page'];
-  size: iGetStudentsRequestParams['size'];
-}
-
 type FetchStudents = (
   page: iGetStudentsRequestParams['page'],
   size: iGetStudentsRequestParams['size'],
-  sortBy: sortBy,
-  sortDir: sortDir,
+  sortBy: sortStudentsBy,
+  sortDir: sortStudentsDir,
   search: string | null
 )=>(dispatch: Dispatch<iStudentsAction>)=>void
 
-export const fetchStudents: FetchStudents = (page, size,sortBy,sortDir,search) => {
+export const fetchStudents: FetchStudents = (
+  page, size,sortBy,sortDir,search
+) => {
+
+  console.log('fetching')
+
   return async (dispatch: Dispatch<iStudentsAction>)=>{
     try {
       dispatch({
@@ -78,7 +81,45 @@ export const setSelectedStudents = (payload: iStudent['id'][])=>{
 export const setSearchInputValue = (payload: string)=>{
   return (dispatch: Dispatch<iStudentsAction>) => {
     dispatch({
-      type: StudentsActionTypes.SET_SEARCH_INPUT_VALUE,
+      type: StudentsActionTypes.SET_STUDENTS_SEARCH_INPUT_VALUE,
+      payload
+    })
+  }
+}
+
+export const setSortStudentsBy = (payload: sortStudentsBy)=>{
+    return (dispatch: Dispatch<iStudentsAction>) => {
+      dispatch({
+        type: StudentsActionTypes.SET_SORT_STUDENTS_BY,
+        payload
+      })
+    }
+}
+
+
+export const setSortStudentsDir = (payload: sortStudentsDir)=>{
+  return (dispatch: Dispatch<iStudentsAction>) => {
+    dispatch({
+      type: StudentsActionTypes.SET_SORT_STUDENTS_DIR,
+      payload
+    })
+  }
+}
+
+export const setStudentsCurrentPage = (payload: number)=>{
+  return (dispatch: Dispatch<iStudentsAction>) => {
+    dispatch({
+      type: StudentsActionTypes.SET_CURRENT_STUDENTS_PAGE,
+      payload
+    })
+  }
+}
+
+
+export const setStudentsRowsPerPage = (payload: number)=>{
+  return (dispatch: Dispatch<iStudentsAction>) => {
+    dispatch({
+      type: StudentsActionTypes.SET_STUDENTS_ROWS_PER_PAGE,
       payload
     })
   }

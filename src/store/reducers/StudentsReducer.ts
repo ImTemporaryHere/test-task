@@ -6,7 +6,11 @@ const initialState: iStudentsState = {
   loading: false,
   error: null,
   selectedStudents: [],
-  searchValueInput: ''
+  searchValueInput: '',
+  sortBy: null,
+  sortDir: 1,
+  currentPage: 1,
+  rowsPerPage: 5
 }
 
 
@@ -40,10 +44,42 @@ export const studentsReducer = (state = initialState, action: iStudentsAction): 
         }
       }
 
-      case StudentsActionTypes.SET_SEARCH_INPUT_VALUE: {
+      case StudentsActionTypes.SET_STUDENTS_SEARCH_INPUT_VALUE: {
         return {
           ...state,
           searchValueInput: action.payload,
+        }
+      }
+
+
+
+      case StudentsActionTypes.SET_SORT_STUDENTS_BY: {
+        return {
+          ...state,
+          sortBy: action.payload,
+        }
+      }
+
+      case StudentsActionTypes.SET_SORT_STUDENTS_DIR: {
+        return {
+          ...state,
+          sortDir: action.payload,
+        }
+      }
+
+
+
+      case StudentsActionTypes.SET_CURRENT_STUDENTS_PAGE: {
+        return {
+          ...state,
+          currentPage: action.payload,
+        }
+      }
+
+      case StudentsActionTypes.SET_STUDENTS_ROWS_PER_PAGE: {
+        return {
+          ...state,
+          rowsPerPage: action.payload,
         }
       }
 
