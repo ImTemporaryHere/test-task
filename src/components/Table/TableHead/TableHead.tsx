@@ -8,6 +8,7 @@ import * as React from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 // @ts-ignore
 import styles from './styles.module.scss'
+import {styled} from "@mui/material";
 
 
 
@@ -71,7 +72,17 @@ interface EnhancedTableHeadProps {
 
 
 
-
+const StyledTableCell = styled(TableCell)(()=>({
+  '&': {
+    fontFamily: 'Rubik',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '14px',
+    lineHeight: '140%',
+    color: '#777777',
+    opacity: '0.8',
+  }
+}))
 
 
 
@@ -84,7 +95,7 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        <StyledTableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -94,10 +105,10 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
               'aria-label': 'select all desserts',
             }}
           />
-        </TableCell>
+        </StyledTableCell>
 
         {headCells.map((headCell,i) => (
-          <TableCell
+          <StyledTableCell
             style={{width: headCell.width || 'auto'}}
             key={headCell.columnName}
             align={headCell.align || 'left'}
@@ -126,15 +137,15 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
             }
 
-          </TableCell>
+          </StyledTableCell>
         ))}
 
-        <TableCell align={'right'}>
+        <StyledTableCell align={'right'}>
           <div className={styles['select-actions']}>
             {numSelected > 0 && 'Actions'}
             <KeyboardArrowDownIcon style={{marginLeft: "auto"}} />
           </div>
-        </TableCell>
+        </StyledTableCell>
 
       </TableRow>
     </TableHead>

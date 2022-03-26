@@ -5,16 +5,18 @@
     background-color: #F9F9F9;
   }
 
+  &__archived {
+    background: #F9F9F9;
+    box-shadow: 0px 1px 4px rgba(60, 52, 135, 0.15);
+  }
+
   &:hover {
     cursor: pointer;
     background-color: #F2F2F2;
   }
 }
 
-.table-row-archived {
-  background: #F9F9F9;
-  box-shadow: 0px 1px 4px rgba(60, 52, 135, 0.15);
-}
+
 
 .archived-heading {
   padding: 8px;
@@ -41,3 +43,4 @@
     border: none;
   }
 }
+

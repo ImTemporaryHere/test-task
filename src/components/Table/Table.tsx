@@ -14,7 +14,7 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 // @ts-ignore
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {Collapse, LinearProgress} from "@mui/material";
+import {Collapse, LinearProgress, styled} from "@mui/material";
 import {iStudent, sortStudentsBy, sortStudentsDir} from "../../types/Student";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
@@ -34,7 +34,22 @@ import statisticsIcon from '../../assets/statistics-icon.svg'
 
 
 
+const StyledTableCell = styled(TableCell)(()=>({
+  '&': {
+    fontFamily: 'Rubik',
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '14px',
+    lineHeight: '140%',
+    color: '#828282',
+  }
+}))
 
+const StyledTableCellArchived = styled(StyledTableCell)(()=>({
+  '&': {
+    color: '#C0C0C0',
+  }
+}))
 
 
 
@@ -149,6 +164,27 @@ export default function EnhancedTable() {
   }
 
 
+  const getColor = (score: string) : string =>{
+    let color: string;
+
+
+    if (parseInt(score) < 50) {
+      color = '#DB4437'
+    }
+    else if (parseInt(score) >= 80) {
+      color = '#0F9D58'
+    }
+    else if( parseInt(score) >= 90  ) {
+      color = '#4285F4'
+    }
+    else {
+      color = '#DB4437'
+    }
+
+    return color
+  }
+
+
 
 
 
@@ -199,7 +235,7 @@ export default function EnhancedTable() {
 
                 tabIndex={-1}
               >
-                <TableCell
+                <StyledTableCell
                   component="th"
                   padding='none'
                   colSpan={8}
@@ -214,7 +250,7 @@ export default function EnhancedTable() {
                   {error && (
                     <h2>Error {error}</h2>
                   )}
-                </TableCell>
+                </StyledTableCell>
 
 
               </TableRow>
@@ -222,7 +258,7 @@ export default function EnhancedTable() {
 
               <TableRow
               >
-                <TableCell
+                <StyledTableCell
                   component="th"
                   padding='none'
                   colSpan={8}
@@ -242,7 +278,7 @@ export default function EnhancedTable() {
                       />
                     </div>
                   )}
-                </TableCell>
+                </StyledTableCell>
 
 
               </TableRow>
@@ -257,6 +293,10 @@ export default function EnhancedTable() {
                   const isItemSelected = isSelected(studentRow.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   const isOddNumber = index % 2 === 0
+
+
+
+
 
                   return (
 
@@ -277,7 +317,7 @@ export default function EnhancedTable() {
 
                         selected={isItemSelected}
                       >
-                        <TableCell padding="checkbox">
+                        <StyledTableCell padding="checkbox">
                           <Checkbox
                             onChange={(event)=>{
 
@@ -289,20 +329,20 @@ export default function EnhancedTable() {
                               'aria-labelledby': labelId,
                             }}
                           />
-                        </TableCell>
-                        <TableCell
+                        </StyledTableCell>
+                        <StyledTableCell
                           component="th"
                           id={labelId}
                           scope="row"
                         >
                           {studentRow.name}
-                        </TableCell>
-                        <TableCell>{studentRow.id}</TableCell>
-                        <TableCell>{studentRow.class}</TableCell>
-                        <TableCell>{studentRow.score}</TableCell>
-                        <TableCell>{studentRow.speed}</TableCell>
-                        <TableCell>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
-                        <TableCell>
+                        </StyledTableCell>
+                        <StyledTableCell>{studentRow.id}</StyledTableCell>
+                        <StyledTableCell>{studentRow.class}</StyledTableCell>
+                        <StyledTableCell style={{color: getColor(studentRow.score)}}>{studentRow.score}</StyledTableCell>
+                        <StyledTableCell style={{color: getColor(studentRow.score)}} >{studentRow.speed}</StyledTableCell>
+                        <StyledTableCell>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</StyledTableCell>
+                        <StyledTableCell>
 
 
                           {
@@ -348,13 +388,13 @@ export default function EnhancedTable() {
                               )
                           }
 
-                        </TableCell>
+                        </StyledTableCell>
 
                       </TableRow>
 
 
                       <TableRow style={{ margin: 0,padding: 0 }}>
-                        <TableCell padding={'none'}  colSpan={8}>
+                        <StyledTableCell padding={'none'}  colSpan={8}>
                           <Collapse
                             in={collapsedRowsId.includes(studentRow.id)}
                             easing={'easy-in-out'}
@@ -368,7 +408,7 @@ export default function EnhancedTable() {
                           >
                             <CollapsedTable {...studentRow}/>
                           </Collapse>
-                        </TableCell>
+                        </StyledTableCell>
                       </TableRow>
                     </React.Fragment>
 
@@ -388,9 +428,9 @@ export default function EnhancedTable() {
 
 
               <TableRow>
-                <TableCell padding={'none'} colSpan={8}>
+                <StyledTableCell padding={'none'} colSpan={8}>
                   <h3 className={styles['archived-heading']}>archived</h3>
-                </TableCell>
+                </StyledTableCell>
               </TableRow>
 
 
@@ -415,10 +455,7 @@ export default function EnhancedTable() {
 
 
                         <TableRow
-                          className={classNames({
-                            [styles['table-row']]: true,
-                            [styles['table-row__odd']]: isOddNumber
-                          })}
+                          className={classNames(styles['table-row__archived'],styles['table-row'])}
                           hover
                           onClick={(e)=>{
                             handleRowClick(e,studentRow.id)
@@ -428,7 +465,7 @@ export default function EnhancedTable() {
                           tabIndex={-1}
                           selected={isItemSelected}
                         >
-                          <TableCell padding="checkbox">
+                          <StyledTableCellArchived padding="checkbox">
                             <Checkbox
                               onChange={(event)=>{
 
@@ -440,27 +477,72 @@ export default function EnhancedTable() {
                                 'aria-labelledby': labelId,
                               }}
                             />
-                          </TableCell>
-                          <TableCell
+                          </StyledTableCellArchived>
+                          <StyledTableCellArchived
                             component="th"
                             id={labelId}
                             scope="row"
                           >
                             {studentRow.name}
-                          </TableCell>
-                          <TableCell>{studentRow.id}</TableCell>
-                          <TableCell>{studentRow.class}</TableCell>
-                          <TableCell>{studentRow.score}</TableCell>
-                          <TableCell>{studentRow.speed}</TableCell>
-                          <TableCell>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
-                          <TableCell><KeyboardArrowDownIcon/></TableCell>
+                          </StyledTableCellArchived>
+                          <StyledTableCellArchived>{studentRow.id}</StyledTableCellArchived>
+                          <StyledTableCellArchived>{studentRow.class}</StyledTableCellArchived>
+                          <StyledTableCellArchived>{studentRow.score}</StyledTableCellArchived>
+                          <StyledTableCellArchived>{studentRow.speed}</StyledTableCellArchived>
+                          <StyledTableCellArchived>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</StyledTableCellArchived>
+                          <StyledTableCellArchived>
+
+                            {
+                              selectedStudents.includes(studentRow.id) ? (
+
+                                  <div className={styles['select-actions']}>
+
+                                    <button className={styles['select-actions__icon-button']}>
+                                      <img width={12} height={12} src={pencilIcon} alt="icon"/>
+                                    </button>
+
+                                    <button className={styles['select-actions__icon-button']}>
+                                      <img width={12} height={12} src={statisticsIcon} alt="icon"/>
+                                    </button>
+
+
+                                    {
+                                      collapsedRowsId.includes(studentRow.id) ?
+
+                                        <KeyboardArrowUpIcon />
+                                        :
+                                        <KeyboardArrowDownIcon />
+                                    }
+
+                                  </div>
+
+                                )
+
+
+                                :
+
+
+                                (
+                                  <div className={styles['select-actions']}>
+                                    {
+                                      collapsedRowsId.includes(studentRow.id) ?
+
+                                        <KeyboardArrowUpIcon style={{marginLeft: 'auto'}}/>
+                                        :
+                                        <KeyboardArrowDownIcon style={{marginLeft: 'auto'}}/>
+                                    }
+                                  </div>
+                                )
+                            }
+
+                          </StyledTableCellArchived>
 
                         </TableRow>
 
 
 
                         <TableRow style={{ margin: 0,padding: 0 }}>
-                          <TableCell padding={'none'}  colSpan={8}>
+                          <StyledTableCell padding={'none'}  colSpan={8}>
                             <Collapse
                               in={collapsedRowsId.includes(studentRow.id)}
                               easing={'easy-in-out'}
@@ -474,7 +556,7 @@ export default function EnhancedTable() {
                             >
                               <CollapsedTable {...studentRow}/>
                             </Collapse>
-                          </TableCell>
+                          </StyledTableCell>
                         </TableRow>
                       </React.Fragment>
 
