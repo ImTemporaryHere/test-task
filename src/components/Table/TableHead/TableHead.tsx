@@ -6,7 +6,8 @@ import {sortStudentsBy, sortStudentsDir, studentsSortingFields} from "../../../t
 import TableSortLabel from "@mui/material/TableSortLabel";
 import * as React from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+// @ts-ignore
+import styles from './styles.module.scss'
 
 
 
@@ -52,7 +53,6 @@ export const headCells: readonly HeadCell[] = [
     slug: 'parents',
     columnName: 'Parents',
     disablePadding: false,
-    width: '530px'
   },
 
 ];
@@ -129,7 +129,12 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
           </TableCell>
         ))}
 
-        <TableCell><KeyboardArrowDownIcon/></TableCell>
+        <TableCell align={'right'}>
+          <div className={styles['select-actions']}>
+            {numSelected > 0 && 'Actions'}
+            <KeyboardArrowDownIcon style={{marginLeft: "auto"}} />
+          </div>
+        </TableCell>
 
       </TableRow>
     </TableHead>

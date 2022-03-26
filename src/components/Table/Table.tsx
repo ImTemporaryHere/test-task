@@ -26,6 +26,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CollapsedTable from "./CollapsedTable/CollapsedTable";
 import classNames from "classnames";
+// @ts-ignore
+import pencilIcon from '../../assets/pencil-icon.svg'
+// @ts-ignore
+import statisticsIcon from '../../assets/statistics-icon.svg'
 
 
 
@@ -178,7 +182,7 @@ export default function EnhancedTable() {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size='medium'
+            size='small'
           >
             <EnhancedTableHead
               numSelected={selectedStudents.length}
@@ -299,12 +303,51 @@ export default function EnhancedTable() {
                         <TableCell>{studentRow.speed}</TableCell>
                         <TableCell>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
                         <TableCell>
+
+
                           {
-                            collapsedRowsId.includes(studentRow.id) ?
-                              <KeyboardArrowUpIcon/>
+                            selectedStudents.includes(studentRow.id) ? (
+
+                                <div className={styles['select-actions']}>
+
+                                  <button className={styles['select-actions__icon-button']}>
+                                    <img width={12} height={12} src={pencilIcon} alt="icon"/>
+                                  </button>
+
+                                  <button className={styles['select-actions__icon-button']}>
+                                    <img width={12} height={12} src={statisticsIcon} alt="icon"/>
+                                  </button>
+
+
+                                  {
+                                    collapsedRowsId.includes(studentRow.id) ?
+
+                                      <KeyboardArrowUpIcon />
+                                      :
+                                      <KeyboardArrowDownIcon />
+                                  }
+
+                                </div>
+
+                              )
+
+
                               :
-                              <KeyboardArrowDownIcon/>
+
+
+                              (
+                                <div className={styles['select-actions']}>
+                                  {
+                                    collapsedRowsId.includes(studentRow.id) ?
+
+                                      <KeyboardArrowUpIcon style={{marginLeft: 'auto'}}/>
+                                      :
+                                      <KeyboardArrowDownIcon style={{marginLeft: 'auto'}}/>
+                                  }
+                                </div>
+                              )
                           }
+
                         </TableCell>
 
                       </TableRow>

@@ -26,3 +26,18 @@
   color: #5B5B5B;
 
 }
+
+.select-actions {
+  min-height: 36px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  width: 100px;
+  justify-content: space-between;
+
+  &__icon-button {
+    padding: 10px;
+    background: #F2F2F2;
+    border: none;
+  }
+}
