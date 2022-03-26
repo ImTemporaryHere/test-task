@@ -214,7 +214,7 @@ export default function EnhancedTable() {
 
 
 
-        <TableContainer>
+        <TableContainer style={{padding: '0px 40px'}}>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
