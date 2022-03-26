@@ -74,7 +74,8 @@ export default function EnhancedTable() {
   ) => {
     setSortStudentsBy(sortBy);
     setSortStudentsDir(sortDir);
-    fetchStudents(currentPage,rowsPerPage,sortBy,sortDir,searchValueInput);
+    setStudentsCurrentPage(1)
+    fetchStudents(1,rowsPerPage,sortBy,sortDir,searchValueInput);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
