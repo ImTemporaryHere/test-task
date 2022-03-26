@@ -1,0 +1,38 @@
+.filters-container {
+  display: flex;
+  justify-content: center;
+  background: #5B5B5B;
+  padding-bottom: 11.5px;
+  padding-top: 11.5px;
+}
+
+.filter-item {
+  margin-left: 12px;
+  &:first-child {
+    margin-left: 0px;
+  }
+}
+
+.clear-filters {
+  display: flex;
+  align-items: center;
+  padding: 7.5px 12px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 140%;
+  /* identical to box height, or 17px */
+  text-transform: uppercase;
+  /* New Gray */
+  color: #C0C0C0;
+
+  &:hover {
+    cursor: pointer;
+    color: white;
+  }
+
+  &__cross-icon {
+    margin-right: 10px;
+    width: 10px;
+    height: 10px;
+  }
+}

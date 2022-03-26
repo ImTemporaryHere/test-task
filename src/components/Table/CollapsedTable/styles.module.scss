@@ -1,0 +1,127 @@
+.content-container {
+  /* Bg */
+  background: #F2F2F2;
+  /* Bg */
+  border: 1px solid #F2F2F2;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(60, 52, 135, 0.15);
+  padding: 20px 60px;
+}
+
+.student-info-heading {
+  display: flex;
+  align-items: center;
+
+  &__data-key {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+    text-transform: uppercase;
+    /* Gray Mid */
+    color: #777777;
+
+    margin-left: 15px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+
+  &__data-value {
+    font-family: 'Rubik', sans-serif;
+    margin-left: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+    text-transform: uppercase;
+    /* Gray Dark */
+    color: #5B5B5B;
+  }
+
+}
+
+.filters-section {
+  margin-top: 12.5px;
+  display: flex;
+  align-items: center;
+}
+
+.filter-container {
+    margin-left: 16px;
+  &:first-child{
+    margin-left: 0;
+  }
+}
+
+
+.results-markers {
+  margin-top: 12.5px;
+  border-top: 1px solid #A6192E;
+  padding: 12px 0px;
+
+  &__row {
+    display: flex;
+    align-items: center;
+  }
+
+  &__heading {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    text-transform: uppercase;
+    color: #777777;
+  }
+
+  &__marker {
+    display: flex;
+    align-items: center;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 140%;
+    /* identical to box height, or 17px */
+    text-transform: uppercase;
+    margin-left: 24px;
+  }
+
+}
+
+.average-results {
+  padding-top: 20px;
+  padding-left: 102px;
+  padding-bottom: 34px;
+  border-top: 1px solid #A6192E;
+  display: flex;
+  align-items: center;
+
+  &__heading {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+    text-transform: uppercase;
+    /* Gray Mid */
+    color: #777777;
+    margin-right: 237px;
+  }
+
+  &__value_excellent {
+    font-family: 'Rubik';
+    font-style: normal;
+    margin-right: 60px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+    text-transform: uppercase;
+    /* Blue */
+    color: #4285F4;
+  }
+}
