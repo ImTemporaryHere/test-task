@@ -46,7 +46,7 @@ export const fetchStudents: FetchStudents = (
 
       dispatch({
         type: StudentsActionTypes.FETCH_STUDENTS_SUCCESS,
-        payload: response.data
+        payload: {...response.data,data: response.data.data.map((student)=>{return {...student,id: student.id+Math.random()}})}
       })
 
       dispatch({

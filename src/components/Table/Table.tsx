@@ -127,6 +127,26 @@ export default function EnhancedTable() {
   const isSelected = (id: number) => selectedStudents.indexOf(id) !== -1;
 
 
+  const handleRowClick = (event: React.MouseEvent<HTMLTableRowElement>, studentRowId: iStudent['id']):void => {
+    if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
+      return
+    }
+
+
+    if(collapsedRowsId.includes(studentRowId)) {
+      setCollapsedRowsId(collapsedRowsId.filter((rowId)=>rowId!==studentRowId))
+    }
+    else  {
+      setCollapsedRowsId([...collapsedRowsId,studentRowId])
+    }
+
+
+
+  }
+
+
+
+
 
 
   useEffect(()=>{
@@ -193,19 +213,6 @@ export default function EnhancedTable() {
                 </TableCell>
 
 
-                <TableCell
-                  component="th"
-                  padding='none'
-                  colSpan={8}
-                  align={'center'}
-
-                >
-                  {error && (
-                    <h2>Error {error}</h2>
-                  )}
-                </TableCell>
-
-
               </TableRow>
 
 
@@ -249,7 +256,7 @@ export default function EnhancedTable() {
 
                   return (
 
-                    <React.Fragment key={studentRow.id+Math.random().toString()}>
+                    <React.Fragment key={studentRow.id}>
 
                       <TableRow
                         className={classNames({
@@ -257,21 +264,8 @@ export default function EnhancedTable() {
                           [styles['table-row__odd']]: isOddNumber
                         })}
                         hover
-                        onClick={(event) => {
-                          if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
-                            return
-                          }
-
-
-                          if(collapsedRowsId.includes(studentRow.id)){
-                            setCollapsedRowsId(collapsedRowsId.filter((rowId)=>rowId!==studentRow.id))
-                          }
-                          else  {
-                            setCollapsedRowsId([...collapsedRowsId,studentRow.id])
-                          }
-
-
-
+                        onClick={(e)=>{
+                          handleRowClick(e,studentRow.id)
                         }}
                         id={studentRow.id.toString()}
                         aria-checked={isItemSelected}
@@ -323,8 +317,8 @@ export default function EnhancedTable() {
                             easing={'easy-in-out'}
                             timeout={{
                               appear: 500,
-                              enter: 300,
-                              exit: 5000,
+                              enter: 500,
+                              exit: 500,
                             }}
                             appear={true}
                             exit={true}
@@ -365,55 +359,84 @@ export default function EnhancedTable() {
 
 
               {
-                students.slice(0,2)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
+                students.slice(0,2).map((student)=>{return {...student,id: student.id-0.01}})
+                  .map((studentRow, index) => {
+                    const isItemSelected = isSelected(studentRow.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
+                    const isOddNumber = index % 2 === 0
+
 
                     return (
-                      <TableRow
-                        className={styles['table-row-archived']}
-                        hover
-                        onClick={(event) => {
-                          if((event.target as HTMLElement).getAttribute('type') === 'checkbox') {
-                            return
-                          }
-                          console.log('row clicked')
-                        }}
-                        id={row.id.toString()}
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id+Math.random().toString()}
-                        selected={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            onChange={(event)=>{
 
-                              handleSelectCheckbox(event,row.id)
-                            }}
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
+                      <React.Fragment key={studentRow.id}>
+
+
+                        <TableRow
+                          className={classNames({
+                            [styles['table-row']]: true,
+                            [styles['table-row__odd']]: isOddNumber
+                          })}
+                          hover
+                          onClick={(e)=>{
+                            handleRowClick(e,studentRow.id)
+                          }}
+                          id={studentRow.id.toString()}
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          selected={isItemSelected}
                         >
-                          {row.name}
-                        </TableCell>
-                        <TableCell>{row.id}</TableCell>
-                        <TableCell>{row.class}</TableCell>
-                        <TableCell>{row.score}</TableCell>
-                        <TableCell>{row.speed}</TableCell>
-                        <TableCell>{row.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
-                        <TableCell><KeyboardArrowDownIcon/></TableCell>
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              onChange={(event)=>{
 
-                      </TableRow>
+                                handleSelectCheckbox(event,studentRow.id)
+                              }}
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                'aria-labelledby': labelId,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                          >
+                            {studentRow.name}
+                          </TableCell>
+                          <TableCell>{studentRow.id}</TableCell>
+                          <TableCell>{studentRow.class}</TableCell>
+                          <TableCell>{studentRow.score}</TableCell>
+                          <TableCell>{studentRow.speed}</TableCell>
+                          <TableCell>{studentRow.parents.map(parent=><span key={parent}>{parent}</span>)}</TableCell>
+                          <TableCell><KeyboardArrowDownIcon/></TableCell>
+
+                        </TableRow>
+
+
+
+                        <TableRow style={{ margin: 0,padding: 0 }}>
+                          <TableCell padding={'none'}  colSpan={8}>
+                            <Collapse
+                              in={collapsedRowsId.includes(studentRow.id)}
+                              easing={'easy-in-out'}
+                              timeout={{
+                                appear: 500,
+                                enter: 500,
+                                exit: 500,
+                              }}
+                              appear={true}
+                              exit={true}
+                            >
+                              <CollapsedTable {...studentRow}/>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      </React.Fragment>
+
+
+
                     );
                   })}
 
