@@ -30,18 +30,25 @@ import classNames from "classnames";
 import pencilIcon from '../../assets/pencil-icon.svg'
 // @ts-ignore
 import statisticsIcon from '../../assets/statistics-icon.svg'
+// @ts-ignore
+import checkBoxIcon from "../../assets/checkbox.svg";
+// @ts-ignore
+import checkBoxIconActive from "../../assets/checkbox-active.svg";
 
 
 
 
 const StyledTableCell = styled(TableCell)(()=>({
   '&': {
+    border: 'none',
     fontFamily: 'Rubik',
     fontStyle: 'normal',
     fontWeight: '400',
     fontSize: '14px',
     lineHeight: '140%',
     color: '#828282',
+    paddingRight: '12px',
+    paddingLeft: '12px',
   }
 }))
 
@@ -51,7 +58,13 @@ const StyledTableCellArchived = styled(StyledTableCell)(()=>({
   }
 }))
 
+const Icon = () => {
+  return <img src={checkBoxIcon} width={12} height={12} alt="" />
+}
 
+const IconActive = () => {
+  return <img src={checkBoxIconActive} width={12} height={12} alt="" />
+}
 
 
 
@@ -256,43 +269,11 @@ export default function EnhancedTable() {
               </TableRow>
 
 
-              <TableRow
-              >
-                <StyledTableCell
-                  component="th"
-                  padding='none'
-                  colSpan={8}
-                  align={'center'}
-
-                >
-                  {collapsedRowsId.length > 0 && (
-                    <div style={{display: 'flex',justifyContent: 'center'}}>
-                      <TablePagination
-                        rowsPerPageOptions={[2, 5, 10]}
-                        component="div"
-                        count={totalPages*rowsPerPage}
-                        rowsPerPage={rowsPerPage}
-                        page={currentPage-1}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                      />
-                    </div>
-                  )}
-                </StyledTableCell>
-
-
-              </TableRow>
-
-
-
-
-
-
               {students
                 .map((studentRow, index) => {
                   const isItemSelected = isSelected(studentRow.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  const isOddNumber = index % 2 === 0
+                  const isOddNumber = index % 2 !== 0
 
 
 
@@ -323,7 +304,8 @@ export default function EnhancedTable() {
 
                               handleSelectCheckbox(event,studentRow.id)
                             }}
-                            color="primary"
+                            icon={<Icon />}
+                            checkedIcon={<IconActive />}
                             checked={isItemSelected}
                             inputProps={{
                               'aria-labelledby': labelId,
@@ -467,6 +449,8 @@ export default function EnhancedTable() {
                         >
                           <StyledTableCellArchived padding="checkbox">
                             <Checkbox
+                              icon={<Icon />}
+                              checkedIcon={<IconActive />}
                               onChange={(event)=>{
 
                                 handleSelectCheckbox(event,studentRow.id)

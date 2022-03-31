@@ -1,12 +1,11 @@
 .container {
-  padding: 8px 0;
+  width: 100%;
+  padding: 8px 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .section-name {
-  margin-left: 40px;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;

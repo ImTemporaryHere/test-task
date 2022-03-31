@@ -24,7 +24,10 @@ function HeaderNav() {
 
         {menuCategories.map((menuCategory)=>{
           return (
-            <li key={menuCategory} className={styles['header-menu-category']}>
+            <li key={menuCategory} className={classnames({
+              [styles['header-menu-category']]: true,
+              [styles['header-menu-category__active']]: menuCategory==='students'
+            })}>
               {menuCategory}
             </li>
           )
