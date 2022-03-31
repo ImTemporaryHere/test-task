@@ -286,7 +286,8 @@ export default function EnhancedTable() {
                       <TableRow
                         className={classNames({
                           [styles['table-row']]: true,
-                          [styles['table-row__odd']]: isOddNumber
+                          [styles['table-row__odd']]: isOddNumber,
+                          [styles['table-row__selected']]: isItemSelected
                         })}
                         hover
                         onClick={(e)=>{
@@ -295,8 +296,6 @@ export default function EnhancedTable() {
                         id={studentRow.id.toString()}
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-
-                        selected={isItemSelected}
                       >
                         <StyledTableCell padding="checkbox">
                           <Checkbox
@@ -376,7 +375,7 @@ export default function EnhancedTable() {
 
 
                       <TableRow style={{ margin: 0,padding: 0 }}>
-                        <StyledTableCell padding={'none'}  colSpan={8}>
+                        <StyledTableCell padding={'none'}  style={{padding: 0}} colSpan={8}>
                           <Collapse
                             in={collapsedRowsId.includes(studentRow.id)}
                             easing={'easy-in-out'}
@@ -555,19 +554,17 @@ export default function EnhancedTable() {
         </TableContainer>
 
 
-        {collapsedRowsId.length <= 0 && (
-          <div style={{display: 'flex',justifyContent: 'center'}}>
-            <TablePagination
-              rowsPerPageOptions={[2, 5, 10]}
-              component="div"
-              count={totalPages*rowsPerPage}
-              rowsPerPage={rowsPerPage}
-              page={currentPage-1}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </div>
-        )}
+        <div style={{display: 'flex',justifyContent: 'center'}}>
+          <TablePagination
+            rowsPerPageOptions={[2, 5, 10]}
+            component="div"
+            count={totalPages*rowsPerPage}
+            rowsPerPage={rowsPerPage}
+            page={currentPage-1}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
       </Paper>
     </Box>
   );

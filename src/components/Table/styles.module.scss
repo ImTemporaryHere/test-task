@@ -10,6 +10,11 @@
     box-shadow: 0px 1px 4px rgba(60, 52, 135, 0.15);
   }
 
+  &__selected {
+    filter: drop-shadow(0px 1px 4px #F2F2F2);
+    background-color: #F2F2F2;
+  }
+
   &:hover {
     cursor: pointer;
     background-color: #F2F2F2;
