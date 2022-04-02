@@ -9,6 +9,15 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 // @ts-ignore
 import styles from './styles.module.scss'
 import {styled} from "@mui/material";
+// @ts-ignore
+import  checkBoxIcon from '../../../assets/checkbox.svg'
+// @ts-ignore
+import  checkBoxIconActive from '../../../assets/checkbox-active.svg'
+import {FC} from "react";
+// @ts-ignore
+import SortNamesIcon from '../../../assets/sort-table-icons/sortNamesIcon.svg'
+// @ts-ignore
+import SortIngIcon from '../../../assets/sort-table-icons/sorting-icon.svg'
 
 
 
@@ -18,8 +27,15 @@ interface HeadCell {
   disablePadding: boolean;
   columnName: string;
   width?: string;
-  align?: 'right' | 'left'
+  align?: 'right' | 'left',
+  sortIconComponent?: any
 }
+
+const getSortIconComponent = (src: any) => {
+  return ()=> <img src={src} alt=""/>
+}
+
+
 
 export const headCells: readonly HeadCell[] = [
   {
@@ -27,7 +43,8 @@ export const headCells: readonly HeadCell[] = [
     columnName: 'Name',
     disablePadding: false,
     width: '300px',
-    align: 'left'
+    align: 'left',
+    sortIconComponent: getSortIconComponent(SortNamesIcon)
   },
   {
     slug: 'id',
@@ -39,16 +56,19 @@ export const headCells: readonly HeadCell[] = [
     slug: studentsSortingFields.class,
     columnName: 'Class',
     disablePadding: false,
+    sortIconComponent: getSortIconComponent(SortIngIcon)
   },
   {
     slug: studentsSortingFields.score,
     columnName: 'Av. Score , %',
     disablePadding: false,
+    sortIconComponent: getSortIconComponent(SortIngIcon)
   },
   {
     slug: studentsSortingFields.speed,
     columnName: 'Av. speed',
     disablePadding: false,
+    sortIconComponent: getSortIconComponent(SortIngIcon)
   },
   {
     slug: 'parents',
@@ -81,8 +101,28 @@ const StyledTableCell = styled(TableCell)(()=>({
     lineHeight: '140%',
     color: '#777777',
     opacity: '0.8',
+    paddingRight: '12px',
+    paddingLeft: '12px',
   }
 }))
+
+
+const Icon = () => {
+  return <img src={checkBoxIcon} width={12} height={12} alt="" />
+}
+
+const IconActive = () => {
+  return <img src={checkBoxIconActive} width={12} height={12} alt="" />
+}
+
+
+const StyledSortingLabel = styled(TableSortLabel)(()=>({
+  '&': {
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
+}))
+
 
 
 
@@ -97,7 +137,9 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
       <TableRow>
         <StyledTableCell padding="checkbox">
           <Checkbox
-            color="primary"
+            indeterminateIcon={<IconActive />}
+            icon={<Icon />}
+            checkedIcon={<IconActive />}
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -118,7 +160,8 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
 
             {headCell.slug in studentsSortingFields ? (
 
-                <TableSortLabel
+                <StyledSortingLabel
+                  IconComponent={headCell.sortIconComponent}
                   active={sortBy===headCell.slug}
                   direction={sortDir===-1 ? 'asc': 'desc'}
                   onClick={()=>{
@@ -127,7 +170,7 @@ export default function EnhancedTableHead(props: EnhancedTableHeadProps) {
                   }}
                 >
                   {headCell.columnName}
-                </TableSortLabel>
+                </StyledSortingLabel>
 
               )
               :
